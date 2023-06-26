@@ -125,13 +125,15 @@ public class BeanReader {
             // follows Java bean standards. Therefore we retrieve the single parameter of the setter
             // without any error checking.
             final Parameter setterArg = setter.getParameters()[0];
+
             
             final Object value;
             if (triples.isEmpty()) {
                 continue;
-            } else if (triples.size() > 1) {
+            } else if (triples.size() > 1 || setterArg.getType().equals(List.class) || setterArg.getType().equals(Set.class)) {
                 final ParameterizedType genericType =
                         (ParameterizedType)setterArg.getParameterizedType();
+
                 final Class<?> collectionType = (Class<?>)genericType.getActualTypeArguments()[0];
                 
                 final Collection<Object> collection = createCollectionInstance(setterArg.getType());
